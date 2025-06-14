@@ -219,38 +219,53 @@ button.active {
 
 .hamburger-menu {
   position: fixed;
-  top: 1rem;
-  right: 1rem;
+  top: 0;
+  left: -100%;
+  width: 250px;
+  height: 100%;
+  background: #111;
+  color: white;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.5);
   z-index: 1000;
+  transition: left 0.3s ease-in-out;
+  overflow-y: auto;
+}
+
+.hamburger-menu.open {
+  left: 0;
 }
 
 .menu-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
   background: #003087;
-  font-size: 1.5rem;
-  padding: 0.5rem;
-}
-
-.menu-items {
-  display: none;
-  background: #003087;
-  padding: 1rem;
+  color: white;
+  border: none;
+  font-size: 24px;
+  z-index: 1100;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
   border-radius: 5px;
-  margin-top: 0.5rem;
-  width: 200px;
-  transform: translateX(100%);
-  transition: transform 0.3s ease-in-out;
 }
 
-.hamburger-menu.open .menu-items {
+.menu-items button {
   display: block;
-  transform: translateX(0);
+  margin: 10px 0;
+  width: 100%;
+  padding: 10px;
+  background: #222;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-align: left;
+  cursor: pointer;
 }
 
-.menu-items p, .menu-items button {
-  color: #fff;
-  margin: 0.5rem 0;
+.menu-items button:hover {
+  background: #333;
 }
-
 .login {
   display: flex;
   flex-direction: column;

@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { supabase } from "../supabase/client";
 
 const HamburgerMenu = ({ user, open, setOpen }) => {
+  const [showProfile, setShowProfile] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+
   const handleUsernameChange = async () => {
     const newUsername = prompt("Enter new username:");
     if (!newUsername) return;
@@ -32,25 +35,35 @@ const HamburgerMenu = ({ user, open, setOpen }) => {
 
       {user ? (
         <>
-          <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Username:</strong> {user.username}</p>
-          <p><strong>Balance:</strong> {user.balance} mito</p>
-          <button onClick={handleUsernameChange}>Change Username</button>
+          <h3>{user.balance} mito</h3>
+
+          <button onClick={() => setShowProfile(!showProfile)}>Profile</button>
+          {showProfile && (
+            <div className="profile-info">
+              <p><strong>Name:</strong> {user.username}</p>
+              <p><strong>Email:</strong> {user.email}</p>
+            </div>
+          )}
+
+          <button onClick={handleUsernameChange}>Edit Username</button>
+
+          <button onClick={() => setShowInstructions(!showInstructions)}>
+            How to Play
+          </button>
+          {showInstructions && (
+            <ul className="instructions">
+              <li>Stake at least 20 mito.</li>
+              <li>Pick heads or tails.</li>
+              <li>Win = double your stake. Lose = lose it.</li>
+              <li>Daily claim = 100 mito (UTC 12am reset).</li>
+              <li>Leaderboard ranks by total mito won.</li>
+            </ul>
+          )}
+
           <button onClick={handleLogout}>Logout</button>
-          <hr />
-          <h4>How to Play</h4>
-          <ul>
-            <li>Stake at least 20 mito.</li>
-            <li>Pick heads or tails.</li>
-            <li>Win = double your stake. Lose = lose it.</li>
-            <li>Daily claim = 100 mito (UTC 12am reset).</li>
-            <li>Leaderboard ranks by total mito *won*.</li>
-          </ul>
-          <hr />
-          <p>Need help? DM us on Discord.</p>
         </>
       ) : (
-        <p>Please log in to see your profile.</p>
+        <p>Please sign in to view menu</p>
       )}
     </div>
   );

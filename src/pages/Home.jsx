@@ -14,10 +14,7 @@ const Home = () => {
 
   useEffect(() => {
     const getUser = async () => {
-      const {
-        data: { user: authUser },
-      } = await supabase.auth.getUser();
-
+      const { data: { user: authUser } } = await supabase.auth.getUser();
       if (authUser) {
         const { data: playerData } = await supabase
           .from("players")
@@ -26,22 +23,15 @@ const Home = () => {
           .single();
 
         let profile = playerData;
-
         if (!profile) {
           const username = prompt("Enter your username:");
           if (username) {
-            const { data: insertedData, error: insertError } = await supabase
+            const { data: insertedData, error } = await supabase
               .from("players")
               .insert([{ id: authUser.id, username, balance: 100 }])
               .select()
               .single();
-
-            if (insertError) {
-              console.error("Insert failed:", insertError.message);
-              setCheckingAuth(false);
-              return;
-            }
-
+            if (error) return console.error("Insert failed:", error.message);
             profile = insertedData;
           }
         }
@@ -53,7 +43,6 @@ const Home = () => {
           username: profile?.username,
         });
       }
-
       setCheckingAuth(false);
     };
 
@@ -89,16 +78,8 @@ const Home = () => {
     }
 
     const newBalance = (user.balance || 0) + 100;
-
-    await supabase
-      .from("players")
-      .update({ balance: newBalance })
-      .eq("id", user.id);
-
-    await supabase
-      .from("faucet_claims")
-      .insert({ user_id: user.id, claimed_at: new Date().toISOString() });
-
+    await supabase.from("players").update({ balance: newBalance }).eq("id", user.id);
+    await supabase.from("faucet_claims").insert({ user_id: user.id, claimed_at: new Date().toISOString() });
     setUser({ ...user, balance: newBalance });
     alert("Claimed 100 mito!");
   };
@@ -106,38 +87,21 @@ const Home = () => {
   return (
     <div className="home">
       <HamburgerMenu user={user} open={menuOpen} setOpen={setMenuOpen} />
+      <button className="menu-toggle" onClick={() => setMenuOpen(true)}>
+        ☰
+      </button>
 
       <div className="content">
-        {/* Toggle hamburger menu */}
-        {!menuOpen && (
-          <button className="menu-toggle" onClick={() => setMenuOpen(true)}>
-            ☰ Menu
-          </button>
-        )}
-
         {checkingAuth ? (
           <p>Loading...</p>
         ) : user ? (
           <>
-            <div className="header">
-              <span className="rank">#{user.rank || "000"}</span>
-              <span className="balance">{user.balance ?? 0} mito</span>
-              <button className="faucet-btn" onClick={handleFaucet}>
-                Claim Faucet
-              </button>
-            </div>
-
-            <div className="how-to-play">
-              <h3>How to Play</h3>
-              <p>
-                Click or swipe to flip the coin. Bet minimum 20 mito. Win or
-                lose instantly. Top winners go to the leaderboard!
-              </p>
-            </div>
-
             <GameBoard user={user} />
             <DailyStats />
             <Leaderboard />
+            <button className="faucet-btn" onClick={handleFaucet}>
+              Claim Faucet
+            </button>
           </>
         ) : (
           <div className="login">
