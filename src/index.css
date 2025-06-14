@@ -222,11 +222,11 @@ button.active {
   top: 0;
   left: -100%;
   width: 250px;
-  height: 100%;
-  background: #111;
-  color: white;
+  height: 100vh;
+  background: #003087; /* Dark blue */
+  color: #fff;
   padding: 20px;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
   z-index: 1000;
   transition: left 0.3s ease-in-out;
   overflow-y: auto;
@@ -236,17 +236,40 @@ button.active {
   left: 0;
 }
 
+.close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.profile-info,
+.instructions {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 0.5rem;
+  border-radius: 5px;
+  margin: 0.5rem 0;
+}
+
+.instructions li {
+  margin-bottom: 0.3rem;
+}
+
 .menu-btn {
   position: fixed;
-  top: 20px;
-  left: 20px;
+  top: 1rem;
+  left: 1rem; /* Small button on left side */
   background: #003087;
-  color: white;
+  color: #fff;
   border: none;
-  font-size: 24px;
+  font-size: 1.2rem; /* Smaller size */
   z-index: 1100;
   cursor: pointer;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem; /* Compact padding */
   border-radius: 5px;
 }
 
@@ -255,8 +278,8 @@ button.active {
   margin: 10px 0;
   width: 100%;
   padding: 10px;
-  background: #222;
-  color: white;
+  background: #003087;
+  color: #fff;
   border: none;
   border-radius: 5px;
   text-align: left;
@@ -264,8 +287,9 @@ button.active {
 }
 
 .menu-items button:hover {
-  background: #333;
+  background: #0056d2;
 }
+
 .login {
   display: flex;
   flex-direction: column;
