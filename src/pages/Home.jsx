@@ -10,13 +10,13 @@ const Home = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true); // new
 
   useEffect(() => {
     const getUser = async () => {
       const { data: { user: authUser } } = await supabase.auth.getUser();
 
       if (authUser) {
-        // Try to get existing profile from players table
         const { data: playerData, error } = await supabase
           .from("players")
           .select("rank, balance, username")
@@ -25,7 +25,6 @@ const Home = () => {
 
         let profile = playerData;
 
-        // If no profile exists, prompt for username and insert new record
         if (!profile) {
           const username = prompt("Enter your username:");
           if (username) {
@@ -37,6 +36,7 @@ const Home = () => {
 
             if (insertError) {
               console.error("Insert failed:", insertError.message);
+              setCheckingAuth(false);
               return;
             }
 
@@ -51,6 +51,8 @@ const Home = () => {
           username: profile?.username,
         });
       }
+
+      setCheckingAuth(false); // done checking
     };
 
     getUser();
@@ -103,7 +105,9 @@ const Home = () => {
     <div className="home">
       <HamburgerMenu user={user} open={menuOpen} setOpen={setMenuOpen} />
       <div className="content">
-        {user ? (
+        {checkingAuth ? (
+          <p>Loading...</p>
+        ) : user ? (
           <>
             <div className="header">
               <span className="rank">#{user.rank || "000"}</span>
