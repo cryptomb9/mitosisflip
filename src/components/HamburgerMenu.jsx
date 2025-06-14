@@ -19,13 +19,39 @@ const HamburgerMenu = ({ user, open, setOpen }) => {
     }
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    window.location.reload();
+  };
+
   return (
     <div className={`hamburger-menu ${open ? "open" : ""}`}>
-      <button onClick={() => setOpen(false)}>Close Menu</button>
-      <p><strong>Email:</strong> {user.email}</p>
-      <p><strong>Username:</strong> {user.username}</p>
-      <p><strong>Balance:</strong> {user.balance} mito</p>
-      <button onClick={handleUsernameChange}>Change Username</button>
+      <button className="close-btn" onClick={() => setOpen(false)}>
+        ✕
+      </button>
+
+      {user ? (
+        <>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Username:</strong> {user.username}</p>
+          <p><strong>Balance:</strong> {user.balance} mito</p>
+          <button onClick={handleUsernameChange}>Change Username</button>
+          <button onClick={handleLogout}>Logout</button>
+          <hr />
+          <h4>How to Play</h4>
+          <ul>
+            <li>Stake at least 20 mito.</li>
+            <li>Pick heads or tails.</li>
+            <li>Win = double your stake. Lose = lose it.</li>
+            <li>Daily claim = 100 mito (UTC 12am reset).</li>
+            <li>Leaderboard ranks by total mito *won*.</li>
+          </ul>
+          <hr />
+          <p>Need help? DM us on Discord.</p>
+        </>
+      ) : (
+        <p>Please log in to see your profile.</p>
+      )}
     </div>
   );
 };

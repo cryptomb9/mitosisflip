@@ -105,12 +105,20 @@ const Home = () => {
 
   return (
     <div className="home">
+      <HamburgerMenu user={user} open={menuOpen} setOpen={setMenuOpen} />
+
       <div className="content">
+        {/* Toggle hamburger menu */}
+        {!menuOpen && (
+          <button className="menu-toggle" onClick={() => setMenuOpen(true)}>
+            ☰ Menu
+          </button>
+        )}
+
         {checkingAuth ? (
           <p>Loading...</p>
         ) : user ? (
           <>
-            <HamburgerMenu user={user} open={menuOpen} setOpen={setMenuOpen} />
             <div className="header">
               <span className="rank">#{user.rank || "000"}</span>
               <span className="balance">{user.balance ?? 0} mito</span>
@@ -118,6 +126,15 @@ const Home = () => {
                 Claim Faucet
               </button>
             </div>
+
+            <div className="how-to-play">
+              <h3>How to Play</h3>
+              <p>
+                Click or swipe to flip the coin. Bet minimum 20 mito. Win or
+                lose instantly. Top winners go to the leaderboard!
+              </p>
+            </div>
+
             <GameBoard user={user} />
             <DailyStats />
             <Leaderboard />
