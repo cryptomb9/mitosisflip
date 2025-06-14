@@ -1,0 +1,293 @@
+/* src/index.css */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background: #9d5ac2;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+button {
+  cursor: pointer;
+  background: #003087;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #0056d2;
+}
+
+input {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  margin: 0.5rem 0;
+  width: 100%;
+  max-width: 300px;
+}
+
+.home {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 1rem;
+}
+
+.rank, .balance {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.faucet-btn {
+  padding: 0.5rem 1rem;
+}
+
+.game-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 600px;
+  width: 100%;
+}
+
+.coin {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.coin-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.coin.flipping {
+  animation: flip 1.5s ease-in-out;
+}
+
+@keyframes flip {
+  0% { transform: rotateY(0deg); }
+  50% { transform: rotateY(180deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+.wager-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.wager-input label {
+  font-size: 1rem;
+}
+
+.choice-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+button.active {
+  background: #0056d2;
+}
+
+.flip-button {
+  margin-top: 0.5rem;
+}
+
+.result, .balance, .message {
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+.daily-stats, .leaderboard {
+  width: 100%;
+  max-width: 900px;
+  margin-top: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+/* Leaderboard Grid + Top 3 Animations */
+.leaderboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+}
+
+.leaderboard-entry {
+  background: #1e1e2f;
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s;
+}
+
+.leaderboard-entry:hover {
+  transform: translateY(-5px);
+}
+
+/* Trophy animations for top 3 */
+.leaderboard-entry.top-1::before,
+.leaderboard-entry.top-2::before,
+.leaderboard-entry.top-3::before {
+  content: '🏆';
+  font-size: 2rem;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  animation: trophyBounce 2s infinite ease-in-out;
+}
+
+.leaderboard-entry.top-1 {
+  border: 2px solid gold;
+  animation: glowGold 2s infinite alternate;
+}
+.leaderboard-entry.top-2 {
+  border: 2px solid silver;
+  animation: glowSilver 2s infinite alternate;
+}
+.leaderboard-entry.top-3 {
+  border: 2px solid #cd7f32;
+  animation: glowBronze 2s infinite alternate;
+}
+
+@keyframes trophyBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes glowGold {
+  from {
+    box-shadow: 0 0 10px gold;
+  }
+  to {
+    box-shadow: 0 0 20px gold;
+  }
+}
+
+@keyframes glowSilver {
+  from {
+    box-shadow: 0 0 10px silver;
+  }
+  to {
+    box-shadow: 0 0 20px silver;
+  }
+}
+
+@keyframes glowBronze {
+  from {
+    box-shadow: 0 0 10px #cd7f32;
+  }
+  to {
+    box-shadow: 0 0 20px #cd7f32;
+  }
+}
+
+.hamburger-menu {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+}
+
+.menu-btn {
+  background: #003087;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+}
+
+.menu-items {
+  display: none;
+  background: #003087;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-top: 0.5rem;
+  width: 200px;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.hamburger-menu.open .menu-items {
+  display: block;
+  transform: translateX(0);
+}
+
+.menu-items p, .menu-items button {
+  color: #fff;
+  margin: 0.5rem 0;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  margin: auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.login h2 {
+  margin-bottom: 1rem;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.9);
+  padding: 1rem;
+  border-radius: 10px;
+  max-width: 300px;
+  z-index: 1000;
+}
+
+.modal-content {
+  text-align: center;
+}
+
+.modal button {
+  margin-top: 1rem;
+}
