@@ -10,14 +10,16 @@ const Home = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [checkingAuth, setCheckingAuth] = useState(true); // new
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
+      const {
+        data: { user: authUser },
+      } = await supabase.auth.getUser();
 
       if (authUser) {
-        const { data: playerData, error } = await supabase
+        const { data: playerData } = await supabase
           .from("players")
           .select("rank, balance, username")
           .eq("id", authUser.id)
@@ -52,7 +54,7 @@ const Home = () => {
         });
       }
 
-      setCheckingAuth(false); // done checking
+      setCheckingAuth(false);
     };
 
     getUser();
@@ -103,12 +105,12 @@ const Home = () => {
 
   return (
     <div className="home">
-      <HamburgerMenu user={user} open={menuOpen} setOpen={setMenuOpen} />
       <div className="content">
         {checkingAuth ? (
           <p>Loading...</p>
         ) : user ? (
           <>
+            <HamburgerMenu user={user} open={menuOpen} setOpen={setMenuOpen} />
             <div className="header">
               <span className="rank">#{user.rank || "000"}</span>
               <span className="balance">{user.balance ?? 0} mito</span>
