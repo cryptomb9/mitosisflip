@@ -48,7 +48,20 @@ const Home = () => {
     };
 
     getUser();
-  }, []);
+    const subscription = supabase
+      .channel('public:players')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'players', filter: `id=eq.${user?.id}` }, payload => {
+        setUser(prevUser => ({
+          ...prevUser,
+          balance: payload.new.balance
+        }));
+      })
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [user?.id]);
 
   const handleSignIn = async () => {
     setLoading(true);
@@ -79,15 +92,20 @@ const Home = () => {
     }
 
     const newBalance = (user.balance || 0) + 100;
-    await supabase.from("players").update({ balance: newBalance }).eq("id", user.id);
+    const { error } = await supabase.from("players").update({ balance: newBalance }).eq("id", user.id);
+    if (error) return alert("Failed to update balance: " + error.message);
+
     await supabase.from("faucet_claims").insert({ user_id: user.id, claimed_at: new Date().toISOString() });
-    setUser({ ...user, balance: newBalance });
+    setUser((prevUser) => ({ ...prevUser, balance: newBalance }));
     alert("Claimed 100 mito!");
   };
 
   return (
     <div className="home">
-      <HamburgerMenu user={user} open={menuOpen} setOpen={setMenuOpen} />
+      <HamburgerMenu user={user} open={menuOpen} setOpen={setOpen} />
+      <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
+        ☰
+      </button>
       <div className="content">
         {checkingAuth ? (
           <p>Loading...</p>
