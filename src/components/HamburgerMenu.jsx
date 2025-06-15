@@ -1,3 +1,4 @@
+// src/components/HamburgerMenu.jsx
 import React, { useState } from "react";
 import { supabase } from "../supabase/client";
 

@@ -1,64 +1,36 @@
 // src/components/GameBoard.jsx
 import React, { useState } from "react";
-import { supabase } from "../supabase/client";
-import mitosisLogo from "../assets/mitosis-logo.png";
 
 const GameBoard = ({ user }) => {
-  const [choice, setChoice] = useState("heads");
-  const [wager, setWager] = useState(20); // New wager state
-  const [flipping, setFlipping] = useState(false);
+  const [wager, setWager] = useState(20);
+  const [choice, setChoice] = useState(null);
   const [result, setResult] = useState(null);
-  const [balance, setBalance] = useState(user.balance || 0);
-  const [message, setMessage] = useState("");
+  const [flipping, setFlipping] = useState(false);
 
-  const flipCoin = async () => {
-    if (wager < 10) {
-      setMessage("Minimum wager: 10 mito");
-      return;
-    }
-    if (balance < wager) {
-      setMessage("Insufficient balance");
-      return;
-    }
-
-    const winChance = 0.5;
-    const isWin = Math.random() < winChance;
-
+  const handleFlip = () => {
+    if (!user || wager < 20 || !choice) return alert("Select a wager (min 20 mito) and choice!");
     setFlipping(true);
-    setMessage("Flipping...");
-    await new Promise((res) => setTimeout(res, 1500));
-
-    const outcome = Math.random() > 0.5 ? "heads" : "tails";
-    const didWin = isWin && outcome === choice;
-
-    const newBalance = didWin ? balance + wager : balance - wager;
-    setBalance(newBalance);
-    setResult({ outcome, didWin });
-    setFlipping(false);
-    setMessage(didWin ? `You won ${wager} mito!` : `You lost ${wager} mito!`);
-
-    await supabase.from("players").update({ balance: newBalance }).eq("id", user.id);
-    if (didWin) {
-      await supabase.from("results").insert({
-        user_id: user.id,
-        won: true,
-        amount: wager,
-        timestamp: new Date().toISOString(),
-      });
-    }
+    setTimeout(() => {
+      const outcome = Math.random() > 0.5 ? "heads" : "tails";
+      setResult(outcome === choice ? "You Won!" : "You Lost!");
+      if (outcome === choice) {
+        // Simulate balance update (replace with Supabase later)
+        // setUser({ ...user, balance: user.balance + wager });
+      } else {
+        // setUser({ ...user, balance: user.balance - wager });
+      }
+      setFlipping(false);
+    }, 1500);
   };
 
   return (
     <div className="game-board">
-      <div className={`coin ${flipping ? "flipping" : ""}`}>
-        <img src={mitosisLogo} alt="Coin" className="coin-image" />
-      </div>
       <div className="wager-input">
         <label>Wager (min 20 mito):</label>
         <input
           type="number"
           value={wager}
-          onChange={(e) => setWager(Number(e.target.value))}
+          onChange={(e) => setWager(Math.max(20, parseInt(e.target.value) || 20))}
           min="20"
         />
       </div>
@@ -70,19 +42,17 @@ const GameBoard = ({ user }) => {
           Tails
         </button>
       </div>
-      <button onClick={flipCoin} disabled={flipping} className="flip-button">
+      <button className="flip-button" onClick={handleFlip} disabled={!choice || flipping}>
         Flip Coin
       </button>
-      {result && (
-        <div className="result">
-          <p>Outcome: {result.outcome}</p>
-          <p>{result.didWin ? "🎉 You Won!" : "😓 You Lost"}</p>
-        </div>
-      )}
-      <div className="balance">
-        <p>Balance: {balance} mito</p>
+      <div className="coin" style={{ opacity: flipping ? 0.5 : 1 }}>
+        <img
+          src="https://via.placeholder.com/120?text=Coin"
+          alt="Coin"
+          className={`coin-image ${flipping ? "flipping" : ""}`}
+        />
       </div>
-      <p className="message">{message}</p>
+      {result && <p className="result">{result}</p>}
     </div>
   );
 };
