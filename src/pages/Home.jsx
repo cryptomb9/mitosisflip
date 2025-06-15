@@ -12,39 +12,48 @@ const Home = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (authUser) {
-        const { data: playerData } = await supabase
-          .from("players")
-          .select("rank, balance, username")
-          .eq("id", authUser.id)
-          .single();
+      try {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (authUser) {
+          const { data: playerData, error: playerError } = await supabase
+            .from("players")
+            .select("rank, balance, username")
+            .eq("id", authUser.id)
+            .single();
 
-        let profile = playerData;
-        if (!profile) {
-          const username = prompt("Enter your username:");
-          if (username) {
-            const { data: insertedData, error } = await supabase
-              .from("players")
-              .insert([{ id: authUser.id, username, balance: 100 }])
-              .select()
-              .single();
-            if (error) return console.error("Insert failed:", error.message);
-            profile = insertedData;
+          if (playerError) throw playerError;
+
+          let profile = playerData;
+          if (!profile) {
+            const username = prompt("Enter your username:");
+            if (username) {
+              const { data: insertedData, error: insertError } = await supabase
+                .from("players")
+                .insert([{ id: authUser.id, username, balance: 100 }])
+                .select()
+                .single();
+              if (insertError) throw insertError;
+              profile = insertedData;
+            }
           }
-        }
 
-        setUser({
-          ...authUser,
-          rank: profile?.rank,
-          balance: profile?.balance,
-          username: profile?.username,
-        });
+          setUser({
+            ...authUser,
+            rank: profile?.rank,
+            balance: profile?.balance,
+            username: profile?.username,
+          });
+        }
+      } catch (err) {
+        setError("Failed to load user data: " + err.message);
+        console.error(err);
+      } finally {
+        setCheckingAuth(false);
       }
-      setCheckingAuth(false);
     };
 
     getUser();
@@ -86,6 +95,8 @@ const Home = () => {
     setUser((prevUser) => ({ ...prevUser, balance: newBalance }));
     alert("Claimed 100 mito!");
   };
+
+  if (error) return <div style={{ color: "white" }}>Error: {error}</div>;
 
   return (
     <div className="home">
