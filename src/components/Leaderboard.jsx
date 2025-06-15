@@ -1,6 +1,6 @@
 // src/components/Leaderboard.jsx
 import React, { useEffect, useState } from "react";
-import { supabase } from "../supabaseClient";
+import { supabase } from "../supabase/client";
 
 const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
