@@ -52,7 +52,7 @@ const GameBoard = ({ user }) => {
     }
 
     // 🔁 Update player stats (profit/loss) after result
-    await updatePlayerStats(user.name, didWin ? "win" : "lose");
+    await updatePlayerStats(user.username, didWin ? "win" : "lose");
   };
 
   return (

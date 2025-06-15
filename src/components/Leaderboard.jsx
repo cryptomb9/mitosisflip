@@ -1,6 +1,5 @@
-// src/components/Leaderboard.jsx
 import React, { useEffect, useState } from "react";
-import { supabase } from "../supabase/client";
+import { supabase } from "../supabaseClient";
 
 const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
@@ -14,12 +13,10 @@ const Leaderboard = () => {
     if (error) {
       console.error("Error fetching leaderboard:", error.message);
     } else {
-      const sorted = data
-        .sort((a, b) => b.balance - a.balance)
-        .map((player, index) => ({
-          rank: index + 1,
-          ...player,
-        }));
+      const sorted = data.map((player, index) => ({
+        rank: index + 1,
+        ...player,
+      }));
       setLeaderboardData(sorted);
     }
   };
@@ -27,20 +24,17 @@ const Leaderboard = () => {
   useEffect(() => {
     fetchLeaderboard();
 
-    // 🔁 Subscribe to realtime updates
     const channel = supabase
       .channel("realtime-players")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "players" },
-        (payload) => {
-          console.log("⚡ Realtime update:", payload);
-          fetchLeaderboard(); // Refresh the leaderboard
+        () => {
+          fetchLeaderboard();
         }
       )
       .subscribe();
 
-    // Cleanup on unmount
     return () => {
       supabase.removeChannel(channel);
     };
@@ -63,10 +57,10 @@ const Leaderboard = () => {
           {leaderboardData.map((player, index) => (
             <tr key={index} className={player.rank <= 3 ? `top-${player.rank}` : ""}>
               <td>#{player.rank}</td>
-              <td>{player.name}</td>
+              <td>{player.username || "Anonymous"}</td>
               <td>{player.balance} mito</td>
-              <td>{player.profit} mito</td>
-              <td>{player.losses} mito</td>
+              <td>{player.profit || 0} mito</td>
+              <td>{player.losses || 0} mito</td>
             </tr>
           ))}
         </tbody>
