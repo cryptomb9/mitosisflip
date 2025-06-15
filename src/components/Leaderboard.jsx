@@ -2,6 +2,7 @@
 import React from "react";
 
 const Leaderboard = () => {
+  // Mock data (replace with actual Supabase fetch in a real app)
   const leaderboardData = [
     { rank: 1, name: "1blexzy", balance: 200, profit: 150, losses: 50 },
     { rank: 2, name: "2dababy", balance: 100, profit: 80, losses: 20 },
