@@ -127,13 +127,7 @@ const Home = () => {
               </button>
             </div>
 
-            <div className="how-to-play">
-              <h3>How to Play</h3>
-              <p>
-                Click or swipe to flip the coin. Bet minimum 20 mito. Win or
-                lose instantly. Top winners go to the leaderboard!
-              </p>
-            </div>
+          
 
             <GameBoard user={user} />
             <DailyStats />

@@ -1,45 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { supabase } from "../supabase/client";
+// src/components/Leaderboard.jsx
+import React from "react";
 
 const Leaderboard = () => {
-  const [topPlayers, setTopPlayers] = useState([]);
-
-  useEffect(() => {
-    const fetchLeaderboard = async () => {
-      const { data, error } = await supabase
-        .from("players")
-        .select("username, rank, balance")
-        .order("balance", { ascending: false })
-        .limit(100);
-      if (!error) setTopPlayers(data);
-    };
-
-    fetchLeaderboard();
-  }, []);
+  // Mock data (replace with actual Supabase fetch in a real app)
+  const leaderboardData = [
+    { rank: 1, name: "1blexzy", balance: 200, profit: 150, losses: 50 },
+    { rank: 2, name: "2dababy", balance: 100, profit: 80, losses: 20 },
+    { rank: 3, name: "3Ahmed", balance: 40, profit: 30, losses: 10 },
+    { rank: 4, name: "4Techgee", balance: 0, profit: 0, losses: 0 },
+    { rank: 5, name: "5mbagoat", balance: 0, profit: 0, losses: 0 },
+    { rank: 6, name: "6las", balance: 0, profit: 0, losses: 0 },
+    { rank: 7, name: "7techgee is Gay0", balance: 0, profit: 0, losses: 0 },
+    { rank: 8, name: "8Tosin", balance: 0, profit: 0, losses: 0 },
+  ];
 
   return (
     <div className="leaderboard">
-      <h2>🏆 Top 100 Players</h2>
-      <ul className="leaderboard-list">
-        {topPlayers.map((player, index) => {
-          const rankClass =
-            index === 0
-              ? "top-1"
-              : index === 1
-              ? "top-2"
-              : index === 2
-              ? "top-3"
-              : "";
-
-          return (
-            <div key={index} className={`leaderboard-entry ${rankClass}`}>
-              <span className="rank">#{index + 1}</span>
-              <span className="username">{player.username || "Guest"}</span>
-              <span className="balance">{player.balance} mito</span>
-            </div>
-          );
-        })}
-      </ul>
+      <h2>Top Players</h2>
+      <table className="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Name</th>
+            <th>Balance</th>
+            <th>Profit</th>
+            <th>Losses</th>
+          </tr>
+        </thead>
+        <tbody>
+          {leaderboardData.map((player, index) => (
+            <tr key={index} className={player.rank <= 3 ? `top-${player.rank}` : ""}>
+              <td>#{player.rank}</td>
+              <td>{player.name}</td>
+              <td>{player.balance} mito</td>
+              <td>{player.profit} mito</td>
+              <td>{player.losses} mito</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
