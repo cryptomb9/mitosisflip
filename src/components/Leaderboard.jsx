@@ -56,7 +56,7 @@ const Leaderboard = () => {
         <tbody>
           {leaderboardData.map((player, index) => (
             <tr key={index} className={player.rank <= 3 ? `top-${player.rank}` : ""}>
-              <td>#{player.rank}</td>
+              <td>{player.rank}</td>
               <td>{player.username || "Anonymous"}</td>
               <td>{player.balance} mito</td>
               <td>{player.profit || 0} mito</td>
