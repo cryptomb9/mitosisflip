@@ -1,3 +1,4 @@
+// src/pages/Home.jsx
 import React, { useEffect, useState } from "react";
 import GameBoard from "../components/GameBoard";
 import Leaderboard from "../components/Leaderboard";
@@ -87,21 +88,21 @@ const Home = () => {
   return (
     <div className="home">
       <HamburgerMenu user={user} open={menuOpen} setOpen={setMenuOpen} />
-      <button className="menu-toggle" onClick={() => setMenuOpen(true)}>
-        ☰
-      </button>
-
       <div className="content">
         {checkingAuth ? (
           <p>Loading...</p>
         ) : user ? (
           <>
+            <div className="header">
+              <span className="rank">#{user.rank || "0000"}</span>
+              <span className="balance">{user.balance ?? 0} mito</span>
+              <button className="faucet-btn" onClick={handleFaucet}>
+                Claim Faucet
+              </button>
+            </div>
             <GameBoard user={user} />
             <DailyStats />
             <Leaderboard />
-            <button className="faucet-btn" onClick={handleFaucet}>
-              Claim Faucet
-            </button>
           </>
         ) : (
           <div className="login">

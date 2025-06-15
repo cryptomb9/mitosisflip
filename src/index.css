@@ -2,14 +2,14 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', Roboto, sans-serif;
-  background: #9d5ac2;
+  background: #7719AA; /* Mitosis purple */
   color: #fff;
   overflow-x: hidden;
 }
 
 button {
   cursor: pointer;
-  background: #003087;
+  background: #4A148C; /* Darker purple */
   color: #fff;
   border: none;
   padding: 0.6rem 1.2rem;
@@ -19,7 +19,7 @@ button {
 }
 
 button:hover {
-  background: #0056d2;
+  background: #6A1B9A; /* Lighter purple hover */
 }
 
 input {
@@ -29,6 +29,8 @@ input {
   margin: 0.5rem 0;
   width: 100%;
   max-width: 300px;
+  background: #9C27B0;
+  color: #fff;
 }
 
 .home {
@@ -52,6 +54,9 @@ input {
   width: 100%;
   max-width: 600px;
   margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
 }
 
 .rank, .balance {
@@ -70,6 +75,7 @@ input {
   gap: 1rem;
   max-width: 600px;
   width: 100%;
+  margin-bottom: 1rem;
 }
 
 .coin {
@@ -77,6 +83,7 @@ input {
   height: 120px;
   border-radius: 50%;
   overflow: hidden;
+  border: 2px solid #9C27B0;
 }
 
 .coin-image {
@@ -112,7 +119,7 @@ input {
 }
 
 button.active {
-  background: #0056d2;
+  background: #6A1B9A;
 }
 
 .flip-button {
@@ -124,97 +131,57 @@ button.active {
   margin: 0.5rem 0;
 }
 
-.daily-stats, .leaderboard {
+.daily-stats {
   width: 100%;
   max-width: 900px;
   margin-top: 1rem;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.5);
   padding: 1rem;
   border-radius: 10px;
 }
 
-/* Leaderboard Grid + Top 3 Animations */
 .leaderboard {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1rem;
-  justify-items: center;
-}
-
-.leaderboard-entry {
-  background: #1e1e2f;
-  padding: 1rem;
-  border-radius: 12px;
-  text-align: center;
   width: 100%;
-  position: relative;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
-  transition: transform 0.3s;
+  max-width: 900px;
+  margin-top: 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  border-radius: 10px;
 }
 
-.leaderboard-entry:hover {
-  transform: translateY(-5px);
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #4A148C;
 }
 
-/* Trophy animations for top 3 */
-.leaderboard-entry.top-1::before,
-.leaderboard-entry.top-2::before,
-.leaderboard-entry.top-3::before {
-  content: '🏆';
-  font-size: 2rem;
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  animation: trophyBounce 2s infinite ease-in-out;
+.leaderboard-table th,
+.leaderboard-table td {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #9C27B0;
 }
 
-.leaderboard-entry.top-1 {
-  border: 2px solid gold;
-  animation: glowGold 2s infinite alternate;
-}
-.leaderboard-entry.top-2 {
-  border: 2px solid silver;
-  animation: glowSilver 2s infinite alternate;
-}
-.leaderboard-entry.top-3 {
-  border: 2px solid #cd7f32;
-  animation: glowBronze 2s infinite alternate;
+.leaderboard-table th {
+  background: #6A1B9A;
+  font-weight: bold;
 }
 
-@keyframes trophyBounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+.leaderboard-table tr.top-1 td {
+  background: #FFD700; /* Gold */
+  color: #000;
+}
+.leaderboard-table tr.top-2 td {
+  background: #C0C0C0; /* Silver */
+  color: #000;
+}
+.leaderboard-table tr.top-3 td {
+  background: #CD7F32; /* Bronze */
+  color: #000;
 }
 
-@keyframes glowGold {
-  from {
-    box-shadow: 0 0 10px gold;
-  }
-  to {
-    box-shadow: 0 0 20px gold;
-  }
-}
-
-@keyframes glowSilver {
-  from {
-    box-shadow: 0 0 10px silver;
-  }
-  to {
-    box-shadow: 0 0 20px silver;
-  }
-}
-
-@keyframes glowBronze {
-  from {
-    box-shadow: 0 0 10px #cd7f32;
-  }
-  to {
-    box-shadow: 0 0 20px #cd7f32;
-  }
+.leaderboard-table tr:hover {
+  background: #5E178C;
 }
 
 .hamburger-menu {
@@ -223,7 +190,7 @@ button.active {
   left: -100%;
   width: 250px;
   height: 100vh;
-  background: #003087; /* Dark blue */
+  background: #4A148C;
   color: #fff;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
@@ -262,32 +229,15 @@ button.active {
 .menu-btn {
   position: fixed;
   top: 1rem;
-  left: 1rem; /* Small button on left side */
-  background: #003087;
+  left: 1rem;
+  background: #4A148C;
   color: #fff;
   border: none;
-  font-size: 1.2rem; /* Smaller size */
+  font-size: 1.2rem;
   z-index: 1100;
   cursor: pointer;
-  padding: 0.5rem; /* Compact padding */
+  padding: 0.5rem;
   border-radius: 5px;
-}
-
-.menu-items button {
-  display: block;
-  margin: 10px 0;
-  width: 100%;
-  padding: 10px;
-  background: #003087;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  text-align: left;
-  cursor: pointer;
-}
-
-.menu-items button:hover {
-  background: #0056d2;
 }
 
 .login {
