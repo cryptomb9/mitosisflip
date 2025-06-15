@@ -1,11 +1,11 @@
-// src/components/GameBoard.jsx
 import React, { useState } from "react";
 import { supabase } from "../supabase/client";
 import mitosisLogo from "../assets/mitosis-logo.png";
+import { updatePlayerStats } from "./updatePlayerStats";
 
 const GameBoard = ({ user }) => {
   const [choice, setChoice] = useState("heads");
-  const [wager, setWager] = useState(20); // New wager state
+  const [wager, setWager] = useState(20);
   const [flipping, setFlipping] = useState(false);
   const [result, setResult] = useState(null);
   const [balance, setBalance] = useState(user.balance || 0);
@@ -37,7 +37,11 @@ const GameBoard = ({ user }) => {
     setFlipping(false);
     setMessage(didWin ? `You won ${wager} mito!` : `You lost ${wager} mito!`);
 
-    await supabase.from("players").update({ balance: newBalance }).eq("id", user.id);
+    await supabase
+      .from("players")
+      .update({ balance: newBalance })
+      .eq("id", user.id);
+
     if (didWin) {
       await supabase.from("results").insert({
         user_id: user.id,
@@ -46,6 +50,9 @@ const GameBoard = ({ user }) => {
         timestamp: new Date().toISOString(),
       });
     }
+
+    // 🔁 Update player stats (profit/loss) after result
+    await updatePlayerStats(user.name, didWin ? "win" : "lose");
   };
 
   return (
@@ -53,6 +60,7 @@ const GameBoard = ({ user }) => {
       <div className={`coin ${flipping ? "flipping" : ""}`}>
         <img src={mitosisLogo} alt="Coin" className="coin-image" />
       </div>
+
       <div className="wager-input">
         <label>Wager (min 20 mito):</label>
         <input
@@ -62,26 +70,37 @@ const GameBoard = ({ user }) => {
           min="20"
         />
       </div>
+
       <div className="choice-buttons">
-        <button className={choice === "heads" ? "active" : ""} onClick={() => setChoice("heads")}>
+        <button
+          className={choice === "heads" ? "active" : ""}
+          onClick={() => setChoice("heads")}
+        >
           Heads
         </button>
-        <button className={choice === "tails" ? "active" : ""} onClick={() => setChoice("tails")}>
+        <button
+          className={choice === "tails" ? "active" : ""}
+          onClick={() => setChoice("tails")}
+        >
           Tails
         </button>
       </div>
+
       <button onClick={flipCoin} disabled={flipping} className="flip-button">
         Flip Coin
       </button>
+
       {result && (
         <div className="result">
           <p>Outcome: {result.outcome}</p>
           <p>{result.didWin ? "🎉 You Won!" : "😓 You Lost"}</p>
         </div>
       )}
+
       <div className="balance">
         <p>Balance: {balance} mito</p>
       </div>
+
       <p className="message">{message}</p>
     </div>
   );

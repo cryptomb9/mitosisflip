@@ -1,18 +1,50 @@
 // src/components/Leaderboard.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "../supabaseClient";
 
 const Leaderboard = () => {
-  // Mock data (replace with actual Supabase fetch in a real app)
-  const leaderboardData = [
-    { rank: 1, name: "1blexzy", balance: 200, profit: 150, losses: 50 },
-    { rank: 2, name: "2dababy", balance: 100, profit: 80, losses: 20 },
-    { rank: 3, name: "3Ahmed", balance: 40, profit: 30, losses: 10 },
-    { rank: 4, name: "4Techgee", balance: 0, profit: 0, losses: 0 },
-    { rank: 5, name: "5mbagoat", balance: 0, profit: 0, losses: 0 },
-    { rank: 6, name: "6las", balance: 0, profit: 0, losses: 0 },
-    { rank: 7, name: "7techgee is Gay0", balance: 0, profit: 0, losses: 0 },
-    { rank: 8, name: "8Tosin", balance: 0, profit: 0, losses: 0 },
-  ];
+  const [leaderboardData, setLeaderboardData] = useState([]);
+
+  const fetchLeaderboard = async () => {
+    const { data, error } = await supabase
+      .from("players")
+      .select("*")
+      .order("balance", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching leaderboard:", error.message);
+    } else {
+      const sorted = data
+        .sort((a, b) => b.balance - a.balance)
+        .map((player, index) => ({
+          rank: index + 1,
+          ...player,
+        }));
+      setLeaderboardData(sorted);
+    }
+  };
+
+  useEffect(() => {
+    fetchLeaderboard();
+
+    // 🔁 Subscribe to realtime updates
+    const channel = supabase
+      .channel("realtime-players")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "players" },
+        (payload) => {
+          console.log("⚡ Realtime update:", payload);
+          fetchLeaderboard(); // Refresh the leaderboard
+        }
+      )
+      .subscribe();
+
+    // Cleanup on unmount
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   return (
     <div className="leaderboard">
