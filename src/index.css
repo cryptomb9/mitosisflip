@@ -37,6 +37,7 @@ input {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .content {
@@ -187,7 +188,7 @@ button.active {
 .hamburger-menu {
   position: fixed;
   top: 0;
-  left: -100%;
+  left: -250px; /* Match width for slide */
   width: 250px;
   height: 100vh;
   background: #4A148C;

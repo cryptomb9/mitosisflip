@@ -48,20 +48,7 @@ const Home = () => {
     };
 
     getUser();
-    const subscription = supabase
-      .channel('public:players')
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'players', filter: `id=eq.${user?.id}` }, payload => {
-        setUser(prevUser => ({
-          ...prevUser,
-          balance: payload.new.balance
-        }));
-      })
-      .subscribe();
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [user?.id]);
+  }, []);
 
   const handleSignIn = async () => {
     setLoading(true);
